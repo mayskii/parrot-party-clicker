@@ -1,20 +1,20 @@
 import globals from "globals";
-import pluginJs from "@eslint/js";
-import pluginJest from "eslint-plugin-jest";
-import pluginPromise from "eslint-plugin-promise";
+import jest from "eslint-plugin-jest";
+import js from "@eslint/js";
+import stylistic from "@stylistic/eslint-plugin";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  {ignores: ["*.config.*"]},
-  {files: ["**/*.js"], languageOptions: {sourceType: "commonjs"}},
-  {languageOptions: { globals: globals.browser }},
-  pluginJs.configs.recommended,
-  pluginPromise.configs['flat/recommended'],
+  js.configs.recommended,
+  { ignores: ["*.config.*"] },
   {
     files: ['**/*.spec.js', '**/*.test.js'],
-    plugins: { jest: pluginJest },
+    plugins: { jest },
     languageOptions: {
-      globals: pluginJest.environments.globals.globals,
+      globals: {
+        ...globals.jest,
+        ...jest.environments.globals.globals
+      }
     },
     rules: {
       'jest/no-disabled-tests': 'warn',
@@ -25,21 +25,33 @@ export default [
     },
   },
   {
+    plugins: { '@stylistic': stylistic },
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+      ecmaVersion: "latest",
+      sourceType: "module",   
+    },
     rules: {
-      "max-len": [1, 120, 2, { "ignoreComments": true }],
-      "no-console": "off",
-      "quotes": ["error", "single"],
-      "camelcase": ["error", {"properties": "always"}],
-      "semi": ["warn", "always"],
-      "comma-dangle": ["warn", "only-multiline"],
+      "@stylistic/array-bracket-spacing": "warn",
+      "@stylistic/comma-dangle": ["warn", "only-multiline"],
+      "@stylistic/indent": ["warn", 2],
+      "@stylistic/max-len": [1, 120, 2, { "ignoreComments": true }],
+      "@stylistic/no-multi-spaces": ["error", { "ignoreEOLComments": true }],
+      "@stylistic/no-trailing-spaces": "warn",
+      "@stylistic/padded-blocks": "off",
+      "@stylistic/quotes": [2, "single", {
+        allowTemplateLiterals: true,
+        avoidEscape: true,
+      },],
+      "@stylistic/semi": ["warn", "always"],
+      "@stylistic/space-before-function-paren": "off",
+      "camelcase": ["error", { "properties": "always" }],
       "dot-notation": "warn",
-      "space-before-function-paren": "off",
-      "indent": ["warn", 2],
-      "padded-blocks": "warn",
-      "no-trailing-spaces": "warn",
-      "array-bracket-spacing": "warn",
-      "no-multi-spaces": ["error", { "ignoreEOLComments": true }],
-      "padded-blocks": ["error", "never"],
+      "no-console": "off",
+      "no-unused-vars": "warn",
       "no-var": "error",
     },
   },

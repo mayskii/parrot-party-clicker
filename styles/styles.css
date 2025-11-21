@@ -23,4 +23,10 @@ body {
     margin: 20%;
     user-select: none;
   }
+
+  #box-two.pressed p {
+  font-size: 50px;
+}
+
+
   
